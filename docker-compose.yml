@@ -1,0 +1,55 @@
+
+services:
+  postgres_db:
+    image: postgres:16.3-alpine
+    container_name: postgres
+    restart: always
+    command:
+      - "postgres"
+      # - "-c"
+      # - "work_mem=1GB"
+      - "-c"
+      - "shared_buffers=512MB"
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+    # ports:
+    #   - 5432:5432
+    network_mode: host
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    restart: always
+    depends_on:
+      - postgres_db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: 123
+    # ports:
+    #   - 8080:80
+    network_mode: host
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx/auth.conf:/etc/nginx/nginx.conf
+    network_mode: host
+    restart: always
+
+  web_server:
+    container_name: server
+    build: ./server
+    network_mode: host
+    restart: always
+    depends_on:
+      - postgres_db
+
+volumes:
+  postgres_data:
+  pgadmin_data:
