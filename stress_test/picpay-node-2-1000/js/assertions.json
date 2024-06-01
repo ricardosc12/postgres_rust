@@ -1,0 +1,10 @@
+{
+  "simulation": "simulations.PicPayTest",
+  "simulationId": "picpaytest",
+  "start": 1717245067040,
+  "description": "",
+  "scenarios": ["PicPay test"],
+  "assertions": [
+
+  ]
+}
